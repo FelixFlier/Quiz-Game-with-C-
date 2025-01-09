@@ -1,8 +1,29 @@
 # Wer wird Millionär Quiz-Spiel
-Eine mit C# entwickelte Windows Forms-Anwendung, die das klassische TV-Show-Quiz-Erlebnis nachbildet.
+Eine Windows Forms-Anwendung, die das klassische TV-Show-Quiz-Erlebnis mit C# nachbildet.
 
 ## Überblick
-Dieses Spiel simuliert die TV-Show "Wer wird Millionär", bei der Spieler zunehmend schwierigere Fragen beantworten müssen, um virtuelles Geld zu gewinnen. Spieler müssen Fragen richtig beantworten und dabei ihre Zeit und Joker strategisch einsetzen.
+Dieses Spiel simuliert die TV-Show "Wer wird Millionär", bei der Spieler zunehmend schwierigere Fragen beantworten müssen, um virtuelles Geld zu gewinnen. Die Anwendung wurde unter Verwendung moderner Softwareentwicklungspraktiken entwickelt und folgt einem sauberen Architekturmuster.
+
+## Technische Details
+
+### Architektur
+Die Anwendung folgt einer Drei-Schichten-Architektur:
+
+* **Präsentationsschicht (UI)**
+   * Windows Forms-Benutzeroberfläche
+   * Echtzeit-Visualisierungsaktualisierungen
+   * Behandlung der Benutzerinteraktionen
+
+* **Geschäftslogikschicht**
+   * Verwaltung der Spiellogik
+   * Fragenbehandlung
+   * Punkteberechnung
+   * Timer-Steuerung
+
+* **Datenschicht**
+   * Fragenspeicherung
+   * Verwaltung des Spielzustands
+   * Punkteverfolgung
 
 ## Funktionen
 - Multiple-Choice-Fragen mit vier Antwortmöglichkeiten
