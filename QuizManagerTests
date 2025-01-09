@@ -1,0 +1,83 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleQuizGame;
+using System;
+
+namespace SimpleQuizGame.Tests
+{
+    [TestClass]
+    public class QuizManagerTests
+    {
+        private QuizManager quizManager;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            quizManager = new QuizManager();
+        }
+
+        [TestMethod]
+        public void GetCurrentQuestion_ReturnsFirstQuestion_WhenQuizStarts()
+        {
+            // Arrange
+            var expectedText = "What is the capital of France?";
+
+            // Act
+            var question = quizManager.GetCurrentQuestion();
+
+            // Assert
+            Assert.AreEqual(expectedText, question.Text);
+        }
+
+        [TestMethod]
+        public void CheckAnswer_ReturnsTrue_WhenCorrectAnswerIsProvided()
+        {
+            // Arrange
+            var correctAnswerIndex = 2;
+
+            // Act
+            var isCorrect = quizManager.CheckAnswer(correctAnswerIndex);
+
+            // Assert
+            Assert.IsTrue(isCorrect);
+        }
+
+        [TestMethod]
+        public void NextQuestion_ReturnsFalse_WhenNoMoreQuestionsAreAvailable()
+        {
+            // Arrange
+            for (int i = 0; i < 10; i++)
+            {
+                quizManager.NextQuestion();
+            }
+
+            // Act
+            var hasNextQuestion = quizManager.NextQuestion();
+
+            // Assert
+            Assert.IsFalse(hasNextQuestion);
+        }
+
+        [TestMethod]
+        public void UseFiftyFiftyJoker_RemovesTwoIncorrectAnswers_WhenJokerIsUsed()
+        {
+            // Arrange
+            var expectedCount = 2;
+
+            // Act
+            var wrongAnswers = quizManager.UseFiftyFiftyJoker();
+
+            // Assert
+            Assert.AreEqual(expectedCount, wrongAnswers.Count);
+        }
+
+        [TestMethod]
+        public void CheckAnswer_ThrowsArgumentOutOfRangeException_WhenInvalidIndexIsProvided()
+        {
+            // Arrange
+            var invalidIndex = -1;
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => quizManager.CheckAnswer(invalidIndex));
+        }
+    }
+}
