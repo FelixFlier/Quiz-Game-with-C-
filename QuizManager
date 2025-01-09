@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SimpleQuizGame
+{
+    /// <summary>
+    /// Manages the quiz game logic, including questions, answers, and score tracking
+    /// </summary>
+    public class QuizManager
+    {
+        private const int INITIAL_QUESTION_INDEX = 0;
+        private const int INITIAL_MONEY_INDEX = 0;
+
+        private List<Question> questions;
+        private int currentQuestionIndex = INITIAL_QUESTION_INDEX;
+        private List<string> moneyLevels;
+        private int currentMoneyIndex = INITIAL_MONEY_INDEX;
+
+        public int CurrentLevel { get; private set; } = INITIAL_QUESTION_INDEX;
+        public string SelectedAnswer { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the QuizManager
+        /// </summary>
+        public QuizManager()
+        {
+            LoadQuestions();
+            InitializeMoneyLevels();
+        }
+
+        /// <summary>
+        /// Loads the predefined quiz questions into memory
+        /// </summary>
+        private void LoadQuestions()
+        {
+            var questionRepository = new QuestionRepository();
+            questions = questionRepository.LoadQuestions();
+        }
+        /// <summary>
+        /// Initializes the prize money levels for the game
+        /// </summary>
+        private void InitializeMoneyLevels()
+        {
+            moneyLevels = new List<string>
+            {
+                "1. €100", "2. €200", "3. €300", "4. €500", "5. €1,000",
+                "6. €2,000", "7. €4,000", "8. €8,000", "9. €16,000", "10. €32,000",
+                "11. €64,000", "12. €125,000", "13. €250,000", "14. €500,000", "15. €1,000,000"
+            };
+        }
+
+        /// <summary>
+        /// Gets the current question being presented to the player
+        /// </summary>
+        /// <returns>The current Question object</returns>
+        public Question GetCurrentQuestion()
+        {
+            return questions[currentQuestionIndex];
+        }
+
+        /// <summary>
+        /// Checks if the selected answer is correct
+        /// </summary>
+        /// <param name="selectedAnswer">Index of the selected answer</param>
+        /// <returns>True if answer is correct, false otherwise</returns>
+        public bool CheckAnswer(int selectedAnswer)
+        {
+            return selectedAnswer == questions[currentQuestionIndex].CorrectAnswerIndex;
+        }
+
+        /// <summary>
+        /// Advances to the next question
+        /// </summary>
+        /// <returns>True if there are more questions, false if quiz is complete</returns>
+        public bool NextQuestion()
+        {
+            currentQuestionIndex++;
+            return currentQuestionIndex < questions.Count;
+        }
+
+        /// <summary>
+        /// Gets the current money level index
+        /// </summary>
+        /// <returns>Current index in the money levels list</returns>
+        public int GetCurrentMoneyIndex()
+        {
+            return currentMoneyIndex;
+        }
+
+        /// <summary>
+        /// Increases the money level after a correct answer
+        /// </summary>
+        public void IncreaseMoneyLevel()
+        {
+            if (currentMoneyIndex < moneyLevels.Count - 1)
+            {
+                currentMoneyIndex++;
+                CurrentLevel++;
+            }
+        }
+
+        /// <summary>
+        /// Implements the 50/50 lifeline by removing two incorrect answers
+        /// </summary>
+        /// <returns>List of indices for the answers to be removed</returns>
+        public List<int> UseFiftyFiftyJoker()
+        {
+            var currentQuestion = GetCurrentQuestion();
+            var wrongAnswers = new List<int>();
+
+            for (int i = 0; i < currentQuestion.Options.Length; i++)
+            {
+                if (i != currentQuestion.CorrectAnswerIndex)
+                {
+                    wrongAnswers.Add(i);
+                }
+            }
+
+            wrongAnswers = wrongAnswers.OrderBy(x => Guid.NewGuid()).ToList();
+            return new List<int> { wrongAnswers[0], wrongAnswers[1] };
+        }
+
+        /// <summary>
+        /// Gets the index of the correct answer for the current question
+        /// </summary>
+        /// <returns>Index of the correct answer</returns>
+        public int GetCorrectAnswerIndex()
+        {
+            return questions[currentQuestionIndex].CorrectAnswerIndex;
+        }
+
+        /// <summary>
+        /// Gets all money levels
+        /// </summary>
+        /// <returns>Array of money level strings</returns>
+        public string[] GetMoneyLevels()
+        {
+            return moneyLevels.ToArray();
+        }
+    }
+}
